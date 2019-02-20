@@ -34,6 +34,9 @@ class AbstractAlive:
             elif course == 4:
                 self.x += 1
 
+        self.x %= 54
+        self.y %= 30
+
     def can_move(self, course):
         new_x, new_y = self.x, self.y
 
