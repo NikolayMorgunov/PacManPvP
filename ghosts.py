@@ -10,7 +10,7 @@ class Ghost(AbstractAlive):
         self.scared = False
         self.running_home = False
         self.width = 54
-        self.highth = 30
+        self.height = 30
 
     def get_coords(self):
         return super().get_coords()
@@ -142,14 +142,17 @@ class OrangeBlinky(Ghost):
                 first_scatter + first_chase + second_scatter + second_chase + third_scatter +
                 third_chase + fourth_scatter):
             return False
+
         else:
             return True
 
     def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time):
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
+
             if ((self.x - self.target_brick[0]) ** 2 + (self.y - self.target_brick[1]) ** 2) <= 16:
                 self.target_brick = (0, self.highth - 1)
+
         else:
             self.target_brick = (0, 0)
 
@@ -188,4 +191,4 @@ class BlueInky(Ghost):
             self.target_brick = ((self.target_brick[0] + pacman_dir[0] * 2), (self.target_brick[0] + pacman_dir[0] * 2))
 
         else:
-            self.target_brick = (self.width - 1, self.highth - 1) # ещё не готово!!!
+            self.target_brick = (self.width - 1, self.highth - 1)  # ещё не готово!!!

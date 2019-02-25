@@ -9,19 +9,23 @@ class AbstractAlive:
         self.sc = screen
         self.course = course  # 1 - up; 2 - left; 3 - down; 4 - right;
         self.image = pygame.image.load(image_name).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (CELL_SIZE, CELL_SIZE))
 
     def get_coords(self):
         return self.x, self.y
 
     def draw(self):
         image = pygame.transform.rotate(self.image, 90 * self.course)
-        rect = image.get_rect(center=(self.x * CELL_SIZE - CELL_SIZE // 2,
-                                      self.y * CELL_SIZE - CELL_SIZE // 2))
+        center = (self.x * CELL_SIZE + CELL_SIZE // 2,
+                                      self.y * CELL_SIZE + CELL_SIZE // 2)
+        # print(center)
+        #
+        # self.sc.blit(image, (self.x * CELL_SIZE, self.y * CELL_SIZE))
+        rect = image.get_rect(center=center)
         self.sc.blit(image, rect)
 
     def move(self, course, walls):
         if self.can_move(course, walls):
-
             if course == 1:
                 self.y -= 1
 
@@ -34,8 +38,8 @@ class AbstractAlive:
             elif course == 4:
                 self.x += 1
 
-            self.x %= 54
-            self.y %= 30
+            print(self.x, self.y)
+            self.draw()
 
     def can_move(self, course, walls):
         new_x, new_y = self.x, self.y
@@ -52,10 +56,10 @@ class AbstractAlive:
         elif course == 4:
             new_x += 1
 
-        if (new_x, new_y) not in walls:
-            return True
+        if (new_x, new_y) in walls:
+            return False
 
-        return False
+        return True
 
 
 # class AbstractEat:

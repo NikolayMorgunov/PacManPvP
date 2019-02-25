@@ -1,10 +1,8 @@
-import pygame
-from consts import CELL_SIZE
 from abstracts_class import AbstractAlive
 
 
 class PacMan(AbstractAlive):
-    def __init__(self, screen, x, y, course=1):
+    def __init__(self, screen, x, y, course=4):
         super().__init__(screen, x, y, course, 'pac-man.png')
         self.is_boosted = False
         self.score = 0
@@ -13,14 +11,19 @@ class PacMan(AbstractAlive):
     def get_coords(self):
         return super().get_coords()
 
-    def draw(self):
-        image = pygame.transform.rotate(self.image, 90 * self.course)
-        rect = image.get_rect(center=(self.x * CELL_SIZE - CELL_SIZE // 2,
-                                      self.x * CELL_SIZE - CELL_SIZE // 2))
-        self.sc.blit(image, rect)
-
-    def move(self, course, walls):
+    def move(self, course, walls, eats, boosts):
         super().move(course, walls)
+        self.course = course
+        coords = self.x, self.y
+
+        if coords in eats:
+            eats.remove(coords)
+
+        elif coords in boosts:
+            boosts.remove(coords)
+            self.is_boosted = True
+
+        return eats, boosts
 
     def die(self):
         self.hp -= 1
