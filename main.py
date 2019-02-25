@@ -1,6 +1,6 @@
 import pygame
 from consts import *
-from ghosts import RedBlinkey
+from ghosts import RedBlinky
 from pacman import PacMan
 
 
@@ -14,8 +14,8 @@ def draw(coords, image_name):
 
 pacman1 = PacMan()  # Добавить требующиеся аргументы
 pacman2 = PacMan()
-red1 = RedBlinkey()
-red2 = RedBlinkey()
+red1 = RedBlinky()
+red2 = RedBlinky()
 blue1 = None  # Заменить None на соотвтствующие классы
 blue2 = None
 purple1 = None
