@@ -43,8 +43,8 @@ def scared_ghost(pacman):
 pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
-pacman1 = PacMan(sc, 47, 4)
-pacman2 = PacMan(sc, 4, 27, 2)
+pacman1 = PacMan(sc, 47, 4, 'pac-man.png')
+pacman2 = PacMan(sc, 4, 27, 'pac-man.png', 2)
 red1 = RedBlinky(sc, 5, 4, 'ghost.png')
 red2 = RedBlinky(sc, 45, 26, 'ghost.png')
 blue1 = BlueInky(sc, 6, 4, 'ghost.png')
