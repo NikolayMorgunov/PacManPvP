@@ -17,7 +17,7 @@ class AbstractAlive:
     def draw(self):
         image = pygame.transform.rotate(self.image, 90 * self.course)
         center = (self.x * CELL_SIZE + CELL_SIZE // 2,
-                                      self.y * CELL_SIZE + CELL_SIZE // 2)
+                  self.y * CELL_SIZE + CELL_SIZE // 2)
         # print(center)
         #
         # self.sc.blit(image, (self.x * CELL_SIZE, self.y * CELL_SIZE))

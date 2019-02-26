@@ -12,6 +12,9 @@ class Ghost(AbstractAlive):
         self.width = 54
         self.height = 30
 
+    def die(self):
+        self.running_home = True
+
     def get_coords(self):
         return super().get_coords()
 

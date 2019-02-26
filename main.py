@@ -4,10 +4,9 @@ from ghosts import RedBlinky, BlueInky, OrangeBlinky, PinkPinky
 from pacman import PacMan
 
 
-def draw(coords, image_name):
+def draw(coords, image):
     x, y = coords
-    image = pygame.transform.scale(pygame.image.load(image_name).convert_alpha(), (CELL_SIZE, CELL_SIZE))
-    image.set_colorkey((255, 255, 255))
+
     rect = image.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2,
                                   y * CELL_SIZE + CELL_SIZE // 2))
     sc.blit(image, rect)
@@ -33,6 +32,14 @@ def write_map(file_name):
                     boosts.append(coord)
 
 
+def scared_ghost(pacman):
+    x, y = pacman.x, pacman.y
+
+    for phantom in sorted(ghosts, key=lambda specter: (specter.scared,
+                                                       abs(x - specter.x) ** 2 + abs(y - specter.y) ** 2))[:4]:
+        phantom.scared = True
+
+
 pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
@@ -46,6 +53,13 @@ purple1 = PinkPinky(sc, 7, 4, 'ghost.png')
 purple2 = PinkPinky(sc, 47, 26, 'ghost.png')
 orange1 = OrangeBlinky(sc, 8, 4, 'ghost.png')
 orange2 = OrangeBlinky(sc, 48, 26, 'ghost.png')
+
+wall_image = pygame.transform.scale(pygame.image.load('wall.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
+wall_image.set_colorkey((255, 255, 255))
+eat_image = pygame.transform.scale(pygame.image.load('eat.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
+eat_image.set_colorkey((255, 255, 255))
+boost_image = pygame.transform.scale(pygame.image.load('boost.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
+boost_image.set_colorkey((255, 255, 255))
 
 clock = pygame.time.Clock()
 
@@ -63,14 +77,14 @@ write_map('map.txt')
 while not is_game_over:
     sc.fill((0, 0, 0))
 
-    # for wall in walls:
-    #     draw(wall, 'wall.png')  # Заменить None на имя png изображения
-    #
-    # for eat in eats:
-    #     draw(eat, 'eat.png')
+    for wall in walls:
+        draw(wall, wall_image)  # Заменить None на имя png изображения
+
+    for eat in eats:
+        draw(eat, eat_image)
 
     for boost in boosts:
-        draw(boost, 'boost.png')
+        draw(boost, boost_image)
 
     for event in pygame.event.get():
 
@@ -111,38 +125,52 @@ while not is_game_over:
                 eats, boosts = pacman1.move(4, walls, eats, boosts)
                 print('d')
 
+    for pac in [pacman1, pacman2]:
+
+        if pac.is_boosted:
+            scared_ghost(pac)
+
     for ghost in ghosts:
         pos = ghost.x, ghost.y
 
-        # if pos in turns:
-        #     # Сдесь должен быть метод вычисляющий для призрака новый путь
-        #     pass
-        #
-        # ghost.move(1, walls)  # За место 1 вычислить направление
-        #
-        # pos = ghost.x, ghost.y
-        #
-        # if pos == pacman1:
-        #
-        #     if not pacman1.die():
-        #         is_game_over = True
-        #         winner = 1
-        #
-        #     is_restart = True
-        #
-        # if pos == pacman2:
-        #
-        #     if not pacman2.die():
-        #
-        #         if is_game_over:
-        #             winner = 0
-        #
-        #         else:
-        #             is_game_over = True
-        #             winner = 2
-        #
-        #     else:
-        #         is_restart = True
+        if pos in turns:
+            # Сдесь должен быть метод вычисляющий для призрака новый путь
+            pass
+
+        ghost.move(1, walls)  # За место 1 вычислить направление
+
+        pos = ghost.x, ghost.y
+
+        if pos == pacman1:
+
+            if ghost.scared:
+                ghost.die()
+
+            else:
+
+                if not pacman1.die():
+                    is_game_over = True
+                    winner = 1
+
+                is_restart = True
+
+        if pos == pacman2:
+
+            if ghost.scared:
+                ghost.die()
+
+            else:
+                if not pacman2.die():
+
+                    if is_game_over:
+                        winner = 0
+
+                    else:
+                        is_game_over = True
+                        winner = 2
+
+                else:
+                    is_restart = True
 
         ghost.draw()
 
