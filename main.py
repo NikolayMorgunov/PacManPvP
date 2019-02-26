@@ -43,8 +43,8 @@ def scared_ghost(pacman):
 pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
-pacman1 = PacMan(sc, 4, 27, 2)
-pacman2 = PacMan(sc, 47, 4)
+pacman1 = PacMan(sc, 47, 4)
+pacman2 = PacMan(sc, 4, 27, 2)
 red1 = RedBlinky(sc, 5, 4, 'ghost.png')
 red2 = RedBlinky(sc, 45, 26, 'ghost.png')
 blue1 = BlueInky(sc, 6, 4, 'ghost.png')
@@ -72,9 +72,15 @@ eats = []
 boosts = []
 turns = []
 
+next_pacman1_course = 4
+next_pacman2_course = 2
+
 write_map('map.txt')
 
+total_fps = 0
 while not is_game_over:
+    total_fps += 1
+
     sc.fill((0, 0, 0))
 
     for wall in walls:
@@ -94,36 +100,78 @@ while not is_game_over:
         elif event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_DOWN:
-                eats, boosts = pacman2.move(3, walls, eats, boosts)
+
+                if pacman1.can_move(3, walls):
+                    pacman1.course = 3
+
+                next_pacman1_course = 3
+
                 print('down')
 
             elif event.key == pygame.K_LEFT:
-                eats, boosts = pacman2.move(2, walls, eats, boosts)
+
+                if pacman1.can_move(2, walls):
+                    pacman1.course = 2
+
+                next_pacman1_course = 2
+
                 print('left')
 
             elif event.key == pygame.K_UP:
-                eats, boosts = pacman2.move(1, walls, eats, boosts)
+
+                if pacman1.can_move(1, walls):
+                    pacman1.course = 1
+
+                next_pacman1_course = 1
+
                 print('up')
 
             elif event.key == pygame.K_RIGHT:
-                eats, boosts = pacman2.move(4, walls, eats, boosts)
-                print('right')
+
+                if pacman1.can_move(4, walls):
+                    pacman1.course = 4
+
+                next_pacman1_course = 4
 
             elif event.key == pygame.K_s:
-                eats, boosts = pacman1.move(3, walls, eats, boosts)
-                print('s')
+
+                if pacman2.can_move(3, walls):
+                    pacman2.course = 3
+
+                next_pacman2_course = 3
 
             elif event.key == pygame.K_a:
-                eats, boosts = pacman1.move(2, walls, eats, boosts)
-                print('a')
+
+                if pacman2.can_move(2, walls):
+                    pacman2.course = 2
+
+                next_pacman2_course = 2
 
             elif event.key == pygame.K_w:
-                eats, boosts = pacman1.move(1, walls, eats, boosts)
-                print('w')
+
+                if pacman2.can_move(1, walls):
+                    pacman2.course = 1
+
+                next_pacman2_course = 1
 
             elif event.key == pygame.K_d:
-                eats, boosts = pacman1.move(4, walls, eats, boosts)
-                print('d')
+
+                if pacman2.can_move(4, walls):
+                    pacman2.course = 4
+
+                next_pacman2_course = 4
+
+    if total_fps >= FPS // 4:
+        total_fps = 0
+
+        if pacman1.can_move(next_pacman1_course, walls):
+            pacman1.course = next_pacman1_course
+
+        if pacman2.can_move(next_pacman2_course, walls):
+            pacman2.course = next_pacman2_course
+
+        eats, boosts = pacman1.move(walls, eats, boosts)
+        eats, boosts = pacman2.move(walls, eats, boosts)
 
     for pac in [pacman1, pacman2]:
 

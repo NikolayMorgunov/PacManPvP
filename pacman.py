@@ -11,9 +11,8 @@ class PacMan(AbstractAlive):
     def get_coords(self):
         return super().get_coords()
 
-    def move(self, course, walls, eats, boosts):
-        super().move(course, walls)
-        self.course = course
+    def move(self, walls, eats, boosts):
+        super().move(self.course, walls)
         coords = self.x, self.y
 
         if coords in eats:

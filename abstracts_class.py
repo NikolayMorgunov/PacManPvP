@@ -1,5 +1,5 @@
 import pygame
-from consts import CELL_SIZE
+from consts import CELL_SIZE, CELL_WIGHT, CELL_HEIGHT
 
 
 class AbstractAlive:
@@ -38,7 +38,18 @@ class AbstractAlive:
             elif course == 4:
                 self.x += 1
 
-            print(self.x, self.y)
+            if self.x < 0:
+                self.x += CELL_WIGHT
+
+            elif self.x > CELL_WIGHT - 1:
+                self.x = 0
+
+            if self.y < 0:
+                self.y += CELL_HEIGHT
+
+            elif self.y > CELL_HEIGHT - 1:
+                self.y = 0
+
             self.draw()
 
     def can_move(self, course, walls):
