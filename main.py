@@ -44,7 +44,7 @@ pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
 pacman1 = PacMan(sc, 47, 4, 'pac-man.png')
-pacman2 = PacMan(sc, 4, 27, 'pac-man.png', 2)
+pacman2 = PacMan(sc, 4, 27, 'ghost.png', 2)
 red1 = RedBlinky(sc, 5, 4, 'ghost.png')
 red2 = RedBlinky(sc, 45, 26, 'ghost.png')
 blue1 = BlueInky(sc, 6, 4, 'ghost.png')
@@ -79,9 +79,8 @@ write_map('map.txt')
 
 total_fps = 0
 while not is_game_over:
-    total_fps += 1
-
     sc.fill((0, 0, 0))
+    total_fps += 1
 
     for wall in walls:
         draw(wall, wall_image)  # Заменить None на имя png изображения
@@ -176,7 +175,11 @@ while not is_game_over:
     for pac in [pacman1, pacman2]:
 
         if pac.is_boosted:
+            pac.is_boosted = False
             scared_ghost(pac)
+
+    pacman1.draw()
+    pacman2.draw()
 
     for ghost in ghosts:
         pos = ghost.x, ghost.y
@@ -222,7 +225,8 @@ while not is_game_over:
 
         ghost.draw()
 
-    pacman1.draw()
-    pacman2.draw()
     pygame.display.flip()
     clock.tick(FPS)
+    print(pacman1.rect)
+
+
