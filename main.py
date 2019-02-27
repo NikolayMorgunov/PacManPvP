@@ -160,7 +160,7 @@ while not is_game_over:
 
                 next_pacman2_course = 4
 
-    if total_fps >= FPS // 4:
+    if total_fps >= FPS // 3:
         total_fps = 0
 
         if pacman1.can_move(next_pacman1_course, walls):
