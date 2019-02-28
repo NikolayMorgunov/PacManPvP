@@ -155,7 +155,6 @@ class OrangeBlinky(Ghost):
 
             if ((self.x - self.target_brick[0]) ** 2 + (self.y - self.target_brick[1]) ** 2) <= 16:
                 self.target_brick = (0, self.highth - 1)
-
         else:
             self.target_brick = (0, 0)
 
@@ -188,10 +187,10 @@ class BlueInky(Ghost):
         else:
             return True
 
-    def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time):
+    def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time, red):
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
-            self.target_brick = ((self.target_brick[0] + pacman_dir[0] * 2), (self.target_brick[0] + pacman_dir[0] * 2))
-
+            self.target_brick = ((2 * (self.target_brick[0] + pacman_dir[0] * 2) - red.x),
+                                 (2 * (self.target_brick[1] + pacman_dir[1] * 2) - red.y))
         else:
-            self.target_brick = (self.width - 1, self.highth - 1)  # ещё не готово!!!
+            self.target_brick = (self.width - 1, self.highth - 1)
