@@ -3,7 +3,7 @@ from consts import CELL_SIZE, CELL_WIGHT, CELL_HEIGHT, MOVE_SPEED
 
 
 class AbstractAlive:
-    def __init__(self, screen, x, y, course, image_name, walls):
+    def __init__(self, screen, x, y, course, image_name):
         self.x = x
         self.y = y
         self.sc = screen
