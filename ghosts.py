@@ -11,12 +11,36 @@ class Ghost(AbstractAlive):
         self.running_home = False
         self.width = 54
         self.height = 30
+        self.target_brick = (0, 0)
 
     def die(self):
         self.running_home = True
 
+    def choose_dir(self):
+        posible_turns = []
+        if self.course != 1:
+            if (self.x, self.y - 1) in self.walls:
+                posible_turns.append(((self.x, self.y - 1), 1))
+        if self.course != 2:
+            if (self.x - 1, self.y) in self.walls:
+                posible_turns.append((((self.x - 1) % self.width, self.y), 2))
+        if self.course != 3:
+            if (self.x, self.y + 1) in self.walls:
+                posible_turns.append(((self.x, self.y + 1), 3))
+        if self.course != 4:
+            if (self.x + 1, self.y) in self.walls:
+                posible_turns.append((((self.x + 1) % self.width, self.y), 4))
+
+        tuple_dir = min(posible_turns,
+                        key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
+
+        self.course = tuple_dir[1]
+
     def get_coords(self):
         return super().get_coords()
+
+    def get_target_brick(self):
+        return self.target_brick
 
     def choose_pac_target(self, pac_coords_1, pac_coords_2):
         dist_to_pac_1 = (pac_coords_1[0] - self.x) ** 2 + (pac_coords_1[1] - self.y) ** 2

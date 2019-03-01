@@ -67,6 +67,7 @@ is_game_over = False
 is_restart = False
 
 ghosts = [red1, red2, blue1, blue2, purple1, purple2, orange1, orange2]
+
 walls = []
 eats = []
 boosts = []
@@ -78,6 +79,11 @@ next_pacman2_course = 2
 write_map('map.txt')
 
 total_fps = 0
+pacman1.set_walls(walls)
+pacman2.set_walls(walls)
+for i in range(8):
+    ghosts[i].set_walls(walls)
+
 while not is_game_over:
     sc.fill((0, 0, 0))
     total_fps += 1
@@ -92,14 +98,11 @@ while not is_game_over:
         draw(boost, boost_image)
 
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
             exit()
 
         elif event.type == pygame.KEYDOWN:
-
             if event.key == pygame.K_DOWN:
-
                 if pacman1.can_move(3, walls):
                     pacman1.course = 3
 
@@ -108,7 +111,6 @@ while not is_game_over:
                 print('down')
 
             elif event.key == pygame.K_LEFT:
-
                 if pacman1.can_move(2, walls):
                     pacman1.course = 2
 
@@ -117,7 +119,6 @@ while not is_game_over:
                 print('left')
 
             elif event.key == pygame.K_UP:
-
                 if pacman1.can_move(1, walls):
                     pacman1.course = 1
 
@@ -126,14 +127,12 @@ while not is_game_over:
                 print('up')
 
             elif event.key == pygame.K_RIGHT:
-
                 if pacman1.can_move(4, walls):
                     pacman1.course = 4
 
                 next_pacman1_course = 4
 
             elif event.key == pygame.K_s:
-
                 if pacman2.can_move(3, walls):
                     pacman2.course = 3
 
@@ -147,14 +146,12 @@ while not is_game_over:
                 next_pacman2_course = 2
 
             elif event.key == pygame.K_w:
-
                 if pacman2.can_move(1, walls):
                     pacman2.course = 1
 
                 next_pacman2_course = 1
 
             elif event.key == pygame.K_d:
-
                 if pacman2.can_move(4, walls):
                     pacman2.course = 4
 
@@ -183,22 +180,15 @@ while not is_game_over:
 
     for ghost in ghosts:
         pos = ghost.x, ghost.y
-
         if pos in turns:
             # Сдесь должен быть метод вычисляющий для призрака новый путь
             pass
-
         ghost.move(1, walls)  # За место 1 вычислить направление
-
         pos = ghost.x, ghost.y
-
         if pos == pacman1:
-
             if ghost.scared:
                 ghost.die()
-
             else:
-
                 if not pacman1.die():
                     is_game_over = True
                     winner = 1
@@ -206,20 +196,15 @@ while not is_game_over:
                 is_restart = True
 
         if pos == pacman2:
-
             if ghost.scared:
                 ghost.die()
-
             else:
                 if not pacman2.die():
-
                     if is_game_over:
                         winner = 0
-
                     else:
                         is_game_over = True
                         winner = 2
-
                 else:
                     is_restart = True
 
