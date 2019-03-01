@@ -3,7 +3,7 @@ from consts import CELL_SIZE, CELL_WIGHT, CELL_HEIGHT, MOVE_SPEED
 
 
 class AbstractAlive:
-    def __init__(self, screen, x, y, course, image_name, walls):
+    def __init__(self, screen, x, y, course, image_name):
         self.x = x
         self.y = y
         self.sc = screen
@@ -19,33 +19,47 @@ class AbstractAlive:
     def draw(self):
         image = pygame.transform.rotate(self.image, 90 * self.course)
 
-        if self.x * CELL_SIZE > self.rect[0]:
-            self.rect[0] += MOVE_SPEED
-        elif self.x * CELL_SIZE < self.rect[0]:
-            self.rect[0] -= MOVE_SPEED
+        if self.y == 14 and self.x == -1 and self.course == 2:
+            self.x = CELL_WIGHT
+            self.rect[0] = self.x * CELL_SIZE
+            print(self.rect)
+        elif self.y == 14 and self.x == CELL_WIGHT and self.course == 4:
+            self.x = -1
+            self.rect[0] = self.x * CELL_SIZE
+            print(self.rect)
+        else:
             if self.x * CELL_SIZE > self.rect[0]:
-                self.rect[0] = self.x * CELL_SIZE
+                if self.x == CELL_WIGHT - 1 and self.course == 2:
+                    self.rect[0] = self.x * CELL_SIZE
 
-        if self.y * CELL_SIZE > self.rect[1]:
-            self.rect[1] += MOVE_SPEED
-        elif self.y * CELL_SIZE < self.rect[1]:
-            self.rect[1] -= MOVE_SPEED
+                else:
+                    self.rect[0] += MOVE_SPEED
+            elif self.x * CELL_SIZE < self.rect[0]:
+                if not self.x and self.course == 4:
+                    self.rect[0] = self.x * CELL_SIZE
+
+                else:
+                    self.rect[0] -= MOVE_SPEED
+                    if self.x * CELL_SIZE > self.rect[0]:
+                        self.rect[0] = self.x * CELL_SIZE
+
             if self.y * CELL_SIZE > self.rect[1]:
-                self.rect[1] = self.y * CELL_SIZE
-        # self.sc.blit(image, self.rect)
-        rect = self.image.get_rect(center=(self.rect[0] + CELL_SIZE // 2,
-                                           self.rect[1] + CELL_SIZE // 2))
-        self.sc.blit(image, rect)
+                self.rect[1] += MOVE_SPEED
+            elif self.y * CELL_SIZE < self.rect[1]:
+                self.rect[1] -= MOVE_SPEED
+                if self.y * CELL_SIZE > self.rect[1]:
+                    self.rect[1] = self.y * CELL_SIZE
+        self.sc.blit(image, self.rect)
 
-    def move(self, course, walls):
-        if self.can_move(course, walls):
-            if course == 1:
+    def move(self):
+        if self.can_move(self.course):
+            if self.course == 1:
                 self.y -= 1
-            elif course == 2:
+            elif self.course == 2:
                 self.x -= 1
-            elif course == 3:
+            elif self.course == 3:
                 self.y += 1
-            elif course == 4:
+            elif self.course == 4:
                 self.x += 1
             if self.x < 0:
                 self.x += CELL_WIGHT
@@ -56,7 +70,7 @@ class AbstractAlive:
             elif self.y > CELL_HEIGHT - 1:
                 self.y = 0
 
-    def can_move(self, course, walls):
+    def can_move(self, course):
         new_x, new_y = self.x, self.y
         if course == 1:
             new_y -= 1
@@ -66,7 +80,7 @@ class AbstractAlive:
             new_y += 1
         elif course == 4:
             new_x += 1
-        if (new_x, new_y) in walls:
+        if (new_x, new_y) in self.walls:
             return False
 
         return True

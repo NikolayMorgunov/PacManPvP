@@ -1,6 +1,7 @@
 from abstracts_class import AbstractAlive
 from consts import BOOST_COST, EAT_COST
 
+
 class PacMan(AbstractAlive):
     def __init__(self, screen, x, y, image_name, course=4):
         super().__init__(screen, x, y, course, image_name)
@@ -11,8 +12,8 @@ class PacMan(AbstractAlive):
     def get_coords(self):
         return super().get_coords()
 
-    def move(self, walls, eats, boosts):
-        super().move(self.course, walls)
+    def move(self, eats, boosts):
+        super().move()
         coords = self.x, self.y
 
         if coords in eats:

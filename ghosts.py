@@ -19,16 +19,16 @@ class Ghost(AbstractAlive):
     def choose_dir(self):
         posible_turns = []
         if self.course != 1:
-            if (self.x, self.y - 1) in self.walls:
+            if (self.x, self.y - 1) not in self.walls:
                 posible_turns.append(((self.x, self.y - 1), 1))
         if self.course != 2:
-            if (self.x - 1, self.y) in self.walls:
+            if (self.x - 1, self.y) not in self.walls:
                 posible_turns.append((((self.x - 1) % self.width, self.y), 2))
         if self.course != 3:
-            if (self.x, self.y + 1) in self.walls:
+            if (self.x, self.y + 1) not in self.walls:
                 posible_turns.append(((self.x, self.y + 1), 3))
         if self.course != 4:
-            if (self.x + 1, self.y) in self.walls:
+            if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
 
         tuple_dir = min(posible_turns,
@@ -66,14 +66,6 @@ class Ghost(AbstractAlive):
             self.scared = False
             self.running_home = False
 
-    def draw(self):
-        super().draw()
-
-    def move(self, course, walls):
-        super().move(course, walls)
-
-
-class RedBlinky(Ghost):
     def what_to_do(self, time):
         first_scatter = 7000
         first_chase = 20000
@@ -101,6 +93,8 @@ class RedBlinky(Ghost):
         else:
             return True
 
+
+class RedBlinky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
@@ -109,112 +103,36 @@ class RedBlinky(Ghost):
 
 
 class PinkPinky(Ghost):
-    def what_to_do(self, time):
-        first_scatter = 7000
-        first_chase = 20000
-        second_scatter = 7000
-        second_chase = 20000
-        third_scatter = 5000
-        third_chase = 20000
-        fourth_scatter = 5000
-
-        if time <= first_scatter or (
-                first_scatter + first_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter + third_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter +
-                third_chase + fourth_scatter):
-            return False
-
-        else:
-            return True
-
-    def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time):
+    def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
+        pacman_dir = sorted([pac_coords_1, pac_coords_2],
+                            key=lambda specter: abs(self.x - specter[0]) ** 2 + abs(self.y - specter[1]) ** 2)
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
-            self.target_brick = ((self.target_brick[0] + pacman_dir[0] * 4), (self.target_brick[0] + pacman_dir[0] * 4))
+            self.target_brick = ((self.target_brick[0] + pacman_dir[0] * 4),
+                                 (self.target_brick[0] + pacman_dir[0] * 4))
 
         else:
             self.target_brick = (0, 0)
 
 
 class OrangeBlinky(Ghost):
-    def what_to_do(self, time):
-        first_scatter = 7000
-        first_chase = 20000
-        second_scatter = 7000
-        second_chase = 20000
-        third_scatter = 5000
-        third_chase = 20000
-        fourth_scatter = 5000
-
-        if time <= first_scatter or (
-                first_scatter + first_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter + third_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter +
-                third_chase + fourth_scatter):
-            return False
-
-        else:
-            return True
-
-    def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time):
+    def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
 
             if ((self.x - self.target_brick[0]) ** 2 + (self.y - self.target_brick[1]) ** 2) <= 16:
-                self.target_brick = (0, self.highth - 1)
+                self.target_brick = (0, self.height - 1)
         else:
             self.target_brick = (0, 0)
 
 
 class BlueInky(Ghost):
-    def what_to_do(self, time):
-        first_scatter = 7000
-        first_chase = 20000
-        second_scatter = 7000
-        second_chase = 20000
-        third_scatter = 5000
-        third_chase = 20000
-        fourth_scatter = 5000
-
-        if time <= first_scatter or (
-                first_scatter + first_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter
-        ) or (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter + third_chase
-        ) < time <= (
-                first_scatter + first_chase + second_scatter + second_chase + third_scatter +
-                third_chase + fourth_scatter):
-            return False
-
-        else:
-            return True
-
-    def chose_target_brick(self, pac_coords_1, pac_coords_2, pacman_dir, time, red):
+    def chose_target_brick(self, pac_coords_1, pac_coords_2, time, red):
+        pacman_dir = sorted([pac_coords_1, pac_coords_2],
+                            key=lambda specter: abs(self.x - specter[0]) ** 2 + abs(self.y - specter[1]) ** 2)
         if self.what_to_do(time):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
             self.target_brick = ((2 * (self.target_brick[0] + pacman_dir[0] * 2) - red.x),
                                  (2 * (self.target_brick[1] + pacman_dir[1] * 2) - red.y))
         else:
-            self.target_brick = (self.width - 1, self.highth - 1)
+            self.target_brick = (self.width - 1, self.height - 1)
