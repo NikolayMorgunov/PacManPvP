@@ -19,10 +19,7 @@ class Ghost(AbstractAlive):
     def choose_dir(self):
         print(self.x, self.y)
         posible_turns = []
-#        with open('map_coords.txt', 'w') as file:
-#            for i in self.walls:
-#                file.write(str(i))
-#                file.write("\n")
+
         if self.course != 3:
             if (self.x, self.y - 1) not in self.walls:
                 posible_turns.append(((self.x, self.y - 1), 1))
@@ -36,10 +33,12 @@ class Ghost(AbstractAlive):
             if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
 
-        tuple_dir = min(posible_turns,
+        if not self.scared:
+            tuple_dir = min(posible_turns,
                         key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
-
-        self.course = tuple_dir[1]
+            self.course = tuple_dir[1]
+        else:
+            self.course = random.choice(posible_turns)[1]
 
     def get_coords(self):
         return super().get_coords()
