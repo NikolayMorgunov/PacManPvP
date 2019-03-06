@@ -207,8 +207,10 @@ while not is_game_over:
 
             if type_of_ghost == BlueInky:
                 ghost.chose_target_brick(pacman1.get_coords(), pacman2.get_coords(), time, red1.get_coords())
+            else:
+                ghost.chose_target_brick(pacman1.get_coords(), pacman2.get_coords(), time)
 
-        # ghost.choose_dir()
+        ghost.choose_dir()
         ghost.move()
 
         pos = ghost.x, ghost.y

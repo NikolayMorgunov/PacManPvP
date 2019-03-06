@@ -17,17 +17,22 @@ class Ghost(AbstractAlive):
         self.running_home = True
 
     def choose_dir(self):
+        print(self.x, self.y)
         posible_turns = []
-        if self.course != 1:
+#        with open('map_coords.txt', 'w') as file:
+#            for i in self.walls:
+#                file.write(str(i))
+#                file.write("\n")
+        if self.course != 3:
             if (self.x, self.y - 1) not in self.walls:
                 posible_turns.append(((self.x, self.y - 1), 1))
-        if self.course != 2:
+        if self.course != 4:
             if (self.x - 1, self.y) not in self.walls:
                 posible_turns.append((((self.x - 1) % self.width, self.y), 2))
-        if self.course != 3:
+        if self.course != 1:
             if (self.x, self.y + 1) not in self.walls:
                 posible_turns.append(((self.x, self.y + 1), 3))
-        if self.course != 4:
+        if self.course != 2:
             if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
 
