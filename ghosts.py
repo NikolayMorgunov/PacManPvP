@@ -104,6 +104,8 @@ class RedBlinky(Ghost):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
         else:
             self.target_brick = (self.width - 1, 0)
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 
 class PinkPinky(Ghost):
@@ -117,7 +119,8 @@ class PinkPinky(Ghost):
 
         else:
             self.target_brick = (0, 0)
-
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 class OrangeBlinky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
@@ -128,7 +131,8 @@ class OrangeBlinky(Ghost):
                 self.target_brick = (0, self.height - 1)
         else:
             self.target_brick = (0, 0)
-
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 class BlueInky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time, red):
@@ -140,3 +144,5 @@ class BlueInky(Ghost):
                                  (2 * (self.target_brick[1] + pacman_dir[1] * 2) - red.y))
         else:
             self.target_brick = (self.width - 1, self.height - 1)
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
