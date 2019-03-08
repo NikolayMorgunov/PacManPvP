@@ -19,10 +19,7 @@ class Ghost(AbstractAlive):
     def choose_dir(self):
         # print(self.x, self.y)
         posible_turns = []
-#        with open('map_coords.txt', 'w') as file:
-#            for i in self.walls:
-#                file.write(str(i))
-#                file.write("\n")
+
         if self.course != 3:
             if (self.x, self.y - 1) not in self.walls:
                 posible_turns.append(((self.x, self.y - 1), 1))
@@ -36,10 +33,12 @@ class Ghost(AbstractAlive):
             if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
 
-        tuple_dir = min(posible_turns,
+        if not self.scared:
+            tuple_dir = min(posible_turns,
                         key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
-
-        self.course = tuple_dir[1]
+            self.course = tuple_dir[1]
+        else:
+            self.course = random.choice(posible_turns)[1]
 
     def get_coords(self):
         return super().get_coords()
@@ -105,6 +104,8 @@ class RedBlinky(Ghost):
             self.target_brick = self.choose_pac_target(pac_coords_1, pac_coords_2)
         else:
             self.target_brick = (self.width - 1, 0)
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 
 class PinkPinky(Ghost):
@@ -118,7 +119,8 @@ class PinkPinky(Ghost):
 
         else:
             self.target_brick = (0, 0)
-
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 class OrangeBlinky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
@@ -129,7 +131,8 @@ class OrangeBlinky(Ghost):
                 self.target_brick = (0, self.height - 1)
         else:
             self.target_brick = (0, 0)
-
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)
 
 class BlueInky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time, red):
@@ -141,3 +144,5 @@ class BlueInky(Ghost):
                                  (2 * (self.target_brick[1] + pacman_dir[1] * 2) - red.y))
         else:
             self.target_brick = (self.width - 1, self.height - 1)
+        if self.running_home:
+            self.target_brick = (self.x_home, self.y_home)

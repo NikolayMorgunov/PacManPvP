@@ -13,7 +13,6 @@ def draw(coords, image):
 
 
 def write_map(file_name):
-
     with open(file_name) as inp:
         text = inp.read().split('\n')
 
@@ -206,7 +205,6 @@ while not is_game_over:
         total_fps = 0
 
         if pacman1.can_move(next_pacman1_course):
-
             pacman1.course = next_pacman1_course
 
         if pacman2.can_move(next_pacman2_course):
@@ -303,5 +301,3 @@ while not is_game_over:
 
     pygame.display.flip()
     clock.tick(FPS)
-
-
