@@ -13,6 +13,10 @@ class AbstractAlive:
         self.rect = [x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE]
         self.walls = []
 
+    def set_coords(self, x, y):
+        self.x, self.y = x, y
+        self.rect = [x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE]
+
     def get_coords(self):
         return self.x, self.y
 
@@ -22,11 +26,12 @@ class AbstractAlive:
         if self.y == 14 and self.x == -1 and self.course == 2:
             self.x = CELL_WIGHT
             self.rect[0] = self.x * CELL_SIZE
-            print(self.rect)
+            # print(self.rect)
+
         elif self.y == 14 and self.x == CELL_WIGHT and self.course == 4:
             self.x = -1
             self.rect[0] = self.x * CELL_SIZE
-            print(self.rect)
+            # print(self.rect)
         else:
             if self.x * CELL_SIZE > self.rect[0]:
                 if self.x == CELL_WIGHT - 1 and self.course == 2:
@@ -45,10 +50,13 @@ class AbstractAlive:
 
             if self.y * CELL_SIZE > self.rect[1]:
                 self.rect[1] += MOVE_SPEED
+
             elif self.y * CELL_SIZE < self.rect[1]:
                 self.rect[1] -= MOVE_SPEED
+
                 if self.y * CELL_SIZE > self.rect[1]:
                     self.rect[1] = self.y * CELL_SIZE
+
         self.sc.blit(image, self.rect)
 
     def move(self):

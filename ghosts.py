@@ -17,7 +17,7 @@ class Ghost(AbstractAlive):
         self.running_home = True
 
     def choose_dir(self):
-        print(self.x, self.y)
+        # print(self.x, self.y)
         posible_turns = []
 #        with open('map_coords.txt', 'w') as file:
 #            for i in self.walls:

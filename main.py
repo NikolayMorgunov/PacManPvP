@@ -40,6 +40,19 @@ def scared_ghost(pacman):
         phantom.scared = True
 
 
+def is_touch_between_packmans():
+    x1, y1 = pacman1.rect[:2]
+    x2, y2 = pacman2.rect[:2]
+
+    if y1 == y2 and (x2 <= x1 <= x2 + CELL_SIZE or x1 <= x2 <= x1 + CELL_SIZE):
+        return True
+
+    elif x1 == x2 and (y2 <= y1 <= y2 + CELL_SIZE or y1 <= y2 <= y1 + CELL_SIZE):
+        return True
+
+    return False
+
+
 pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
@@ -87,6 +100,23 @@ for ghost in ghosts:
 
 while not is_game_over:
     time += clock.tick()
+
+    if is_restart:
+        is_restart = False
+        pacman1.set_coords(47, 4)
+        pacman1.course = 4
+        pacman2.set_coords(4, 27)
+        pacman2.course = 2
+        red1.set_coords(5, 4)
+        red2.set_coords(45, 26)
+        blue1.set_coords(6, 4)
+        blue2.set_coords(46, 26)
+        pink1.set_coords(7, 4)
+        pink2.set_coords(47, 26)
+        orange1.set_coords(8, 4)
+        orange2.set_coords(48, 26)
+        time = 0
+        continue
 
     sc.fill((0, 0, 0))
     total_fps += 1
@@ -169,6 +199,9 @@ while not is_game_over:
 
                 next_pacman2_course = 4
 
+            elif event.key == pygame.K_i:
+                print(pacman1.score, pacman2.score)
+
     if total_fps >= FPS // 3:
         total_fps = 0
 
@@ -191,6 +224,25 @@ while not is_game_over:
     pacman1.draw()
     pacman2.draw()
 
+    if is_touch_between_packmans():
+
+        if pacman1.score > pacman2.score:
+
+            if pacman2.die():
+                is_restart = True
+                print('1')
+            else:
+                is_game_over = True
+
+        elif pacman1.score < pacman2.score:
+
+            if pacman1.die():
+                is_restart = True
+                print('2')
+
+            else:
+                is_game_over = True
+
     for ghost in ghosts:
         total_way = 0
         pos = ghost.x, ghost.y
@@ -200,13 +252,14 @@ while not is_game_over:
 
             for j in range(-1, 2):
 
-                if (pos[0] + i, pos[1] + j) in walls:
+                if i * -1 != j and (i and j) and (pos[0] + i, pos[1] + j) in walls:
                     total_way += 1
 
         if total_way > 2:
 
             if type_of_ghost == BlueInky:
                 ghost.chose_target_brick(pacman1.get_coords(), pacman2.get_coords(), time, red1.get_coords())
+
             else:
                 ghost.chose_target_brick(pacman1.get_coords(), pacman2.get_coords(), time)
 

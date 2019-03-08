@@ -9,9 +9,6 @@ class PacMan(AbstractAlive):
         self.score = 0
         self.hp = 3
 
-    def get_coords(self):
-        return super().get_coords()
-
     def move(self, eats, boosts):
         super().move()
         coords = self.x, self.y
