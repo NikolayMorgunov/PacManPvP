@@ -134,6 +134,7 @@ class OrangeBlinky(Ghost):
         if self.running_home:
             self.target_brick = (self.x_home, self.y_home)
 
+
 class BlueInky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time, red):
         pacman_dir = sorted([pac_coords_1, pac_coords_2],
