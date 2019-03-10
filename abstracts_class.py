@@ -1,5 +1,5 @@
 import pygame
-from consts import CELL_SIZE, CELL_WIGHT, CELL_HEIGHT, MOVE_SPEED
+from consts import CELL_SIZE, CELL_WIGHT, CELL_HEIGHT, MOVE_SPEED, SPACE
 
 
 class AbstractAlive:
@@ -10,52 +10,56 @@ class AbstractAlive:
         self.course = course  # 1 - up; 2 - left; 3 - down; 4 - right;
         self.image = pygame.image.load(image_name).convert_alpha()
         self.image = pygame.transform.scale(self.image, (CELL_SIZE, CELL_SIZE))
-        self.rect = [x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE]
+        self.rect = [x * CELL_SIZE + SPACE, y * CELL_SIZE + SPACE, CELL_SIZE, CELL_SIZE]
         self.walls = []
 
     def set_coords(self, x, y):
         self.x, self.y = x, y
-        self.rect = [x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE]
+        self.rect = [x * CELL_SIZE + SPACE, y * CELL_SIZE + SPACE, CELL_SIZE, CELL_SIZE]
 
     def get_coords(self):
         return self.x, self.y
 
-    def draw(self):
-        image = pygame.transform.rotate(self.image, 90 * self.course)
+    def draw(self, image):
 
         if self.y == 14 and self.x == -1 and self.course == 2:
             self.x = CELL_WIGHT
-            self.rect[0] = self.x * CELL_SIZE
+            self.rect[0] = self.x * CELL_SIZE + SPACE
             # print(self.rect)
 
         elif self.y == 14 and self.x == CELL_WIGHT and self.course == 4:
             self.x = -1
-            self.rect[0] = self.x * CELL_SIZE
+            self.rect[0] = self.x * CELL_SIZE + SPACE
             # print(self.rect)
         else:
-            if self.x * CELL_SIZE > self.rect[0]:
+
+            if self.x * CELL_SIZE + SPACE> self.rect[0]:
+
                 if self.x == CELL_WIGHT - 1 and self.course == 2:
-                    self.rect[0] = self.x * CELL_SIZE
+                    self.rect[0] = self.x * CELL_SIZE + SPACE
 
                 else:
                     self.rect[0] += MOVE_SPEED
-            elif self.x * CELL_SIZE < self.rect[0]:
+
+            elif self.x * CELL_SIZE + SPACE < self.rect[0]:
+
                 if not self.x and self.course == 4:
-                    self.rect[0] = self.x * CELL_SIZE
+                    self.rect[0] = self.x * CELL_SIZE + SPACE
 
                 else:
                     self.rect[0] -= MOVE_SPEED
-                    if self.x * CELL_SIZE > self.rect[0]:
-                        self.rect[0] = self.x * CELL_SIZE
 
-            if self.y * CELL_SIZE > self.rect[1]:
+                    if self.x * CELL_SIZE > self.rect[0]:
+                        self.rect[0] = self.x * CELL_SIZE + SPACE
+
+            if self.y * CELL_SIZE + SPACE > self.rect[1]:
                 self.rect[1] += MOVE_SPEED
 
-            elif self.y * CELL_SIZE < self.rect[1]:
+            elif self.y * CELL_SIZE + SPACE < self.rect[1]:
                 self.rect[1] -= MOVE_SPEED
 
-                if self.y * CELL_SIZE > self.rect[1]:
-                    self.rect[1] = self.y * CELL_SIZE
+                if self.y * CELL_SIZE + SPACE > self.rect[1]:
+                    self.rect[1] = self.y * CELL_SIZE + SPACE
 
         self.sc.blit(image, self.rect)
 
@@ -95,16 +99,3 @@ class AbstractAlive:
 
     def set_walls(self, walls):
         self.walls = walls
-
-# class AbstractEat:
-#     def __init__(self, screen, x, y, cost, image_name):
-#         self.sc = screen
-#         self.x = x
-#         self.y = y
-#         self.cost = cost
-#         self.image = pygame.image.load(image_name).convert_alpha()
-#
-#     def draw(self):
-#         rect = self.image.get_rect(center=(self.x * CELL_SIZE - CELL_SIZE // 2,
-#                                            self.y * CELL_SIZE - CELL_SIZE // 2))
-#         self.sc.blit(self.image, rect)

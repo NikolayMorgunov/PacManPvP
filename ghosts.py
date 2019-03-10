@@ -7,11 +7,14 @@ class Ghost(AbstractAlive):
         super().__init__(screen, x, y, course, image_name)
         self.x_home = x
         self.y_home = y
-        self.scared = False
+        self.is_scared = False
         self.running_home = False
         self.width = 54
         self.height = 30
         self.target_brick = (0, 0)
+
+    def draw(self):
+        super().draw(self.image)
 
     def die(self):
         self.running_home = True
@@ -33,9 +36,9 @@ class Ghost(AbstractAlive):
             if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
 
-        if not self.scared:
+        if not self.is_scared:
             tuple_dir = min(posible_turns,
-                        key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
+                            key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
             self.course = tuple_dir[1]
         else:
             self.course = random.choice(posible_turns)[1]
@@ -54,20 +57,24 @@ class Ghost(AbstractAlive):
 
         elif dist_to_pac_1 < dist_to_pac_2:
             return pac_coords_1
+
         else:
             return random.choice[pac_coords_1, pac_coords_2]
 
     def collision(self, pac_coords_x, pac_coords_y):
         pacman_killed = True
+
         if pac_coords_x == self.x and pac_coords_y == self.y:
-            if self.scared:
+
+            if self.is_scared:
                 self.running_home = True
                 pacman_killed = False
+
         return pacman_killed
 
     def is_home(self):
         if self.x == self.x_home and self.y == self.y_home:
-            self.scared = False
+            self.is_scared = False
             self.running_home = False
 
     def what_to_do(self, time):
@@ -121,6 +128,7 @@ class PinkPinky(Ghost):
             self.target_brick = (0, 0)
         if self.running_home:
             self.target_brick = (self.x_home, self.y_home)
+
 
 class OrangeBlinky(Ghost):
     def chose_target_brick(self, pac_coords_1, pac_coords_2, time):
