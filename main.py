@@ -40,7 +40,7 @@ def write_map(file_name):
 def scared_ghost(pacman):
     x, y = pacman.x, pacman.y
 
-    for phantom in sorted(ghosts, key=lambda specter: (specter.scared,
+    for phantom in sorted(ghosts, key=lambda specter: (specter.is_scared,
                                                        abs(x - specter.x) ** 2 + abs(y - specter.y) ** 2))[:4]:
         phantom.is_scared = True
 
@@ -91,7 +91,7 @@ is_game_over = False
 is_restart = False
 is_end = False
 
-ghosts = [red1, red2, blue1, blue2, pink1, pink2, orange1, orange2]
+ghosts = [red1]
 walls = []
 eats = []
 boosts = []
@@ -268,22 +268,7 @@ while not is_end:
             pos = ghost.x, ghost.y
             type_of_ghost = type(ghost)
 
-            for i in range(-1, 2):
-
-                for j in range(-1, 2):
-
-                    if i * -1 != j and (i and j) and (pos[0] + i, pos[1] + j) in walls:
-                        total_way += 1
-
-            if total_way > 2:
-
-                if type_of_ghost == BlueInky:
-                    ghost.chose_target_brick(pacman2.get_coords(), pacman1.get_coords(), time, red1.get_coords())
-
-                else:
-                    ghost.chose_target_brick(pacman2.get_coords(), pacman1.get_coords(), time)
-
-            ghost.choose_dir()
+            ghost.choose_dir(walls)
             ghost.move()
             pos = ghost.x, ghost.y
 
@@ -349,4 +334,4 @@ while not is_end:
                 orange1.set_coords(8, 4)
                 orange2.set_coords(48, 26)
                 time = 0
-                write_map('map.txt')
+                write_map('full_map.txt')

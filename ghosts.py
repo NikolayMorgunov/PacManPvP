@@ -19,29 +19,18 @@ class Ghost(AbstractAlive):
     def die(self):
         self.running_home = True
 
-    def choose_dir(self):
-        # print(self.x, self.y)
-        posible_turns = []
+    def choose_dir(self, walls):
+        directions = {1: (0, -1),
+                      2: (-1, 0),
+                      3: (0, 1),
+                      4: (1, 0)}
+        self.coords_course = directions[self.course]
+        possible = [i + 1 for i in range(4)]
+        possible = list(filter(lambda x: (-directions[x][0], -directions[x][1]) != self.coords_course and (
+        self.x + directions[x][0], self.y + directions[x][1]) not in walls, possible))
 
-        if self.course != 3:
-            if (self.x, self.y - 1) not in self.walls:
-                posible_turns.append(((self.x, self.y - 1), 1))
-        if self.course != 4:
-            if (self.x - 1, self.y) not in self.walls:
-                posible_turns.append((((self.x - 1) % self.width, self.y), 2))
-        if self.course != 1:
-            if (self.x, self.y + 1) not in self.walls:
-                posible_turns.append(((self.x, self.y + 1), 3))
-        if self.course != 2:
-            if (self.x + 1, self.y) not in self.walls:
-                posible_turns.append((((self.x + 1) % self.width, self.y), 4))
-
-        if not self.is_scared:
-            tuple_dir = min(posible_turns,
-                            key=lambda x: (x[0][0] - self.target_brick[0]) ** 2 + (x[0][1] - self.target_brick[1]) ** 2)
-            self.course = tuple_dir[1]
-        else:
-            self.course = random.choice(posible_turns)[1]
+        self.course = random.choice(possible)
+        print(self.coords_course)
 
     def get_coords(self):
         return super().get_coords()
