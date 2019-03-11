@@ -78,10 +78,6 @@ pacman1.hp_coord = [0, SPACE]
 pacman2.hp_coord = [CELL_SIZE * CELL_WIGHT + SPACE, SPACE]
 
 wall_image = pygame.transform.scale(pygame.image.load('image/wall.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
-# turn_wall_image = pygame.transform.scale(pygame.image.load('image/turn_wall.png').convert_alpha(),
-#                                          (CELL_SIZE, CELL_SIZE))
-# end_wall_image = pygame.transform.scale(pygame.image.load('image/end_wall.png').convert_alpha(),
-#                                         (CELL_SIZE, CELL_SIZE))
 eat_image = pygame.transform.scale(pygame.image.load('image/eat.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
 boost_image = pygame.transform.scale(pygame.image.load('image/boost.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
 
@@ -220,6 +216,10 @@ while not is_end:
 
         if total_fps >= FPS // 3:
             total_fps = 0
+            pacman1.image_index += 1
+            pacman1.image_index %= 4
+            pacman2.image_index += 1
+            pacman2.image_index %= 4
 
             if pacman2.can_move(next_pacman1_course):
                 pacman2.course = next_pacman1_course
@@ -229,6 +229,12 @@ while not is_end:
 
             eats, boosts = pacman2.move(eats, boosts)
             eats, boosts = pacman1.move(eats, boosts)
+
+        elif not total_fps % (FPS // 10):
+            pacman1.image_index += 1
+            pacman1.image_index %= 4
+            pacman2.image_index += 1
+            pacman2.image_index %= 4
 
         for pac in [pacman2, pacman1]:
 

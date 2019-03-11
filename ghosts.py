@@ -1,10 +1,11 @@
 import random
 from abstracts_class import AbstractAlive
+from consts import GHOST_MOVE_SPEED
 
 
 class Ghost(AbstractAlive):
     def __init__(self, screen, x, y, image_name, course=1):
-        super().__init__(screen, x, y, course, image_name)
+        super().__init__(screen, x, y, course, image_name, GHOST_MOVE_SPEED)
         self.x_home = x
         self.y_home = y
         self.is_scared = False
