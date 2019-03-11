@@ -58,7 +58,6 @@ def is_touch(obj1, obj2):
     return False
 
 
-
 pygame.init()
 sc = pygame.display.set_mode((WIGHT, HEIGHT))
 
@@ -79,11 +78,12 @@ pacman1.hp_coord = [0, SPACE]
 pacman2.hp_coord = [CELL_SIZE * CELL_WIGHT + SPACE, SPACE]
 
 wall_image = pygame.transform.scale(pygame.image.load('image/wall.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
-wall_image.set_colorkey((255, 255, 255))
+# turn_wall_image = pygame.transform.scale(pygame.image.load('image/turn_wall.png').convert_alpha(),
+#                                          (CELL_SIZE, CELL_SIZE))
+# end_wall_image = pygame.transform.scale(pygame.image.load('image/end_wall.png').convert_alpha(),
+#                                         (CELL_SIZE, CELL_SIZE))
 eat_image = pygame.transform.scale(pygame.image.load('image/eat.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
-eat_image.set_colorkey((255, 255, 255))
 boost_image = pygame.transform.scale(pygame.image.load('image/boost.png').convert_alpha(), (CELL_SIZE, CELL_SIZE))
-boost_image.set_colorkey((255, 255, 255))
 
 clock = pygame.time.Clock()
 
@@ -140,7 +140,6 @@ while not is_end:
 
         for wall in walls:
             draw(sc, wall, wall_image)
-
         for eat in eats:
             draw(sc, eat, eat_image)
 
