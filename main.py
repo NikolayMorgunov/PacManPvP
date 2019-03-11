@@ -40,7 +40,7 @@ def write_map(file_name):
 def scared_ghost(pacman):
     x, y = pacman.x, pacman.y
 
-    for phantom in sorted(ghosts, key=lambda specter: (specter.scared,
+    for phantom in sorted(ghosts, key=lambda specter: (specter.is_scared,
                                                        abs(x - specter.x) ** 2 + abs(y - specter.y) ** 2))[:4]:
         phantom.is_scared = True
 
@@ -95,7 +95,7 @@ ghosts = [red1, red2, blue1, blue2, pink1, pink2, orange1, orange2]
 walls = []
 eats = []
 boosts = []
-
+# wall_turn_to_right = [(0, 0), (2, 2), (10, 2), (13, 2), (42, 2), (45, 2)]
 next_pacman1_course = 4
 next_pacman2_course = 2
 total_fps = 0
