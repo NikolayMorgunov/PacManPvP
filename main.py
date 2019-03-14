@@ -87,7 +87,7 @@ is_game_over = False
 is_restart = False
 is_end = False
 
-ghosts = [red1, red2, blue1, blue2, pink1, pink2, orange1, orange2]
+ghosts = [red1]
 walls = []
 eats = []
 boosts = []
@@ -272,24 +272,11 @@ while not is_end:
         for ghost in ghosts:
             total_way = 0
             pos = ghost.x, ghost.y
-            type_of_ghost = type(ghost)
+            if time > 50:
+                ghost.choose_dir()
+                print(pos)
+                time %= 50
 
-            for i in range(-1, 2):
-
-                for j in range(-1, 2):
-
-                    if i * -1 != j and (i and j) and (pos[0] + i, pos[1] + j) in walls:
-                        total_way += 1
-
-            if total_way > 2:
-
-                if type_of_ghost == BlueInky:
-                    ghost.chose_target_brick(pacman2.get_coords(), pacman1.get_coords(), time, red1.get_coords())
-
-                else:
-                    ghost.chose_target_brick(pacman2.get_coords(), pacman1.get_coords(), time)
-
-            ghost.choose_dir()
             ghost.move()
             pos = ghost.x, ghost.y
 
@@ -328,7 +315,7 @@ while not is_end:
             ghost.draw()
 
         pygame.display.flip()
-        clock.tick(FPS)
+       # clock.tick(FPS)
     sc.blit(end_image, (0, 0, 1240, 760))
     pygame.display.flip()
     for event in pygame.event.get():
