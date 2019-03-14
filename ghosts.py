@@ -42,16 +42,18 @@ class Ghost(AbstractAlive):
     def get_coords(self):
         return super().get_coords()
 
-    def collision(self, pac_coords_x, pac_coords_y):
-        pacman_killed = True
+    def collision(self, pacman1, pacman2):
 
-        if (pac_coords_x, pac_coords_y) == (self.x, self.y):
-
+        if pacman1.get_coords() == (self.x, self.y):
             if self.is_scared:
                 self.running_home = True
-                pacman_killed = False
-
-        return pacman_killed
+            else:
+                pacman1.die()
+        if pacman2.get_coords() == (self.x, self.y):
+            if self.is_scared:
+                self.running_home = True
+            else:
+                pacman2.die()
 
     def is_home(self):
         if self.x == self.x_home and self.y == self.y_home:
