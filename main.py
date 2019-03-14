@@ -136,12 +136,15 @@ while not is_end:
 
         for wall in walls:
             draw(sc, wall, wall_image)
+
         for eat in eats:
             draw(sc, eat, eat_image)
 
         for boost in boosts:
             draw(sc, boost, boost_image)
 
+        if not eats:
+            is_game_over = True
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -156,8 +159,6 @@ while not is_end:
 
                     next_pacman1_course = 3
 
-                    print('down')
-
                 elif event.key == pygame.K_LEFT:
 
                     if pacman2.can_move(2):
@@ -165,16 +166,12 @@ while not is_end:
 
                     next_pacman1_course = 2
 
-                    print('left')
-
                 elif event.key == pygame.K_UP:
 
                     if pacman2.can_move(1):
                         pacman2.course = 1
 
                     next_pacman1_course = 1
-
-                    print('up')
 
                 elif event.key == pygame.K_RIGHT:
 
@@ -212,7 +209,8 @@ while not is_end:
                     next_pacman2_course = 4
 
                 elif event.key == pygame.K_i:
-                    is_game_over = True
+                    print(pacman1.get_coords())
+                    print(eats)
 
         if total_fps >= FPS // 3:
             total_fps = 0
@@ -315,9 +313,12 @@ while not is_end:
             ghost.draw()
 
         pygame.display.flip()
-       # clock.tick(FPS)
+
+    # clock.tick(FPS)
+
     sc.blit(end_image, (0, 0, 1240, 760))
     pygame.display.flip()
+
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:

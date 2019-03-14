@@ -45,7 +45,7 @@ class Ghost(AbstractAlive):
     def collision(self, pac_coords_x, pac_coords_y):
         pacman_killed = True
 
-        if pac_coords_x == self.x and pac_coords_y == self.y:
+        if (pac_coords_x, pac_coords_y) == (self.x, self.y):
 
             if self.is_scared:
                 self.running_home = True
@@ -57,6 +57,10 @@ class Ghost(AbstractAlive):
         if self.x == self.x_home and self.y == self.y_home:
             self.is_scared = False
             self.running_home = False
+
+    def move(self):
+        super().move()
+        self.set_coords(self.x, self.y)
 
 
 class RedBlinky(Ghost):

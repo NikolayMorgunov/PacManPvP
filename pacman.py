@@ -19,9 +19,6 @@ class PacMan(AbstractAlive):
 
     def move(self, eats, boosts):
         super().move()
-        # self.image_index += 1
-        # self.image_index %= 4
-
         coords = self.x, self.y
 
         if coords in eats:
