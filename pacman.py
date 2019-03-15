@@ -34,7 +34,7 @@ class PacMan(AbstractAlive):
 
     def die(self):
         self.hp -= 1
-        return bool(self.hp)
+        return self.hp > 0
 
     def draw(self):
         image = pygame.transform.rotate(self.images[self.image_index], 90 * self.course)

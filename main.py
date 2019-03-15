@@ -66,13 +66,13 @@ end_image = pygame.image.load('image/end.png').convert_alpha()
 pacman1 = PacMan(sc, 4, 27, IMAGE_NAME_PACMAN_1, 2)
 pacman2 = PacMan(sc, 47, 4, IMAGE_NAME_PACMAN_2)
 red1 = RedBlinky(sc, 5, 4, IMAGE_NAME_RED_GHOST_1)
-red2 = RedBlinky(sc, 45, 26, IMAGE_NAME_RED_GHOST_2)
+red2 = RedBlinky(sc, 45, 27, IMAGE_NAME_RED_GHOST_2)
 blue1 = BlueInky(sc, 6, 4, IMAGE_NAME_BLUE_GHOST_1)
-blue2 = BlueInky(sc, 46, 26, IMAGE_NAME_BLUE_GHOST_2)
+blue2 = BlueInky(sc, 46, 27, IMAGE_NAME_BLUE_GHOST_2)
 pink1 = PinkPinky(sc, 7, 4, IMAGE_NAME_PINK_GHOST_1)
-pink2 = PinkPinky(sc, 47, 26, IMAGE_NAME_PINK_GHOST_2)
+pink2 = PinkPinky(sc, 47, 27, IMAGE_NAME_PINK_GHOST_2)
 orange1 = OrangeBlinky(sc, 8, 4, IMAGE_NAME_ORANGE_GHOST_1)
-orange2 = OrangeBlinky(sc, 48, 26, IMAGE_NAME_ORANGE_GHOST_2)
+orange2 = OrangeBlinky(sc, 48, 27, IMAGE_NAME_ORANGE_GHOST_2)
 
 pacman1.hp_coord = [0, SPACE]
 pacman2.hp_coord = [CELL_SIZE * CELL_WIGHT + SPACE, SPACE]
@@ -124,13 +124,13 @@ while not is_end:
             pacman1.set_coords(4, 27)
             pacman1.course = 2
             red1.set_coords(5, 4)
-            red2.set_coords(45, 26)
+            red2.set_coords(45, 27)
             blue1.set_coords(6, 4)
-            blue2.set_coords(46, 26)
+            blue2.set_coords(46, 27)
             pink1.set_coords(7, 4)
-            pink2.set_coords(47, 26)
+            pink2.set_coords(47, 27)
             orange1.set_coords(8, 4)
-            orange2.set_coords(48, 26)
+            orange2.set_coords(48, 27)
             time = 0
             continue
 
@@ -145,6 +145,7 @@ while not is_end:
 
         if not eats:
             is_game_over = True
+
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -213,6 +214,10 @@ while not is_end:
                     print(eats)
 
         if total_fps >= FPS // 3:
+            for ghost in ghosts:
+                ghost.choose_dir()
+                ghost.move()
+
             total_fps = 0
             pacman1.image_index += 1
             pacman1.image_index %= 4
@@ -228,7 +233,7 @@ while not is_end:
             eats, boosts = pacman2.move(eats, boosts)
             eats, boosts = pacman1.move(eats, boosts)
 
-        elif not total_fps % (FPS // 10):
+        elif not total_fps % (FPS // 5):
             pacman1.image_index += 1
             pacman1.image_index %= 4
             pacman2.image_index += 1
@@ -268,52 +273,81 @@ while not is_end:
                 continue
 
         for ghost in ghosts:
-            pos = ghost.x, ghost.y
-            ghost.choose_dir()
-            if time > 200:
-                ghost.move()
-            pos = ghost.x, ghost.y
 
-            if pos == pacman2:
+            if is_touch(ghost, pacman2):
+                print(2)
+                # if ghost.is_scared:
+                #     ghost.die()
+                #
+                # else:
 
-                if ghost.is_scared:
-                    ghost.die()
+                if not pacman2.die():
+                    is_game_over = True
+                    winner = 1
 
-                else:
+                is_restart = True
 
-                    if not pacman2.die():
-                        is_game_over = True
-                        winner = 1
+            elif is_touch(ghost, pacman1):
+                print(1)
+                # if ghost.is_scared:
+                #     ghost.die()
+                #
+                # else:
 
-                    is_restart = True
+                if not pacman1.die():
 
-            if pos == pacman1:
-
-                if ghost.is_scared:
-                    ghost.die()
-
-                else:
-
-                    if not pacman1.die():
-
-                        if is_game_over:
-                            winner = 0
-
-                        else:
-                            is_game_over = True
-                            winner = 2
+                    if is_game_over:
+                        winner = 0
 
                     else:
-                        is_restart = True
+                        is_game_over = True
+                        winner = 2
+
+                else:
+                    is_restart = True
 
             ghost.draw()
-            ghost.collision(pacman1, pacman2)
-        time %= 200
+
+        time %= 250
         pygame.display.flip()
 
-    # clock.tick(FPS)
+    if pacman1.hp == pacman2.hp:
+        if pacman1.score == pacman2.score:
+            winner = 0
+
+        elif pacman1.score > pacman2.score:
+            winner = 1
+
+        else:
+            winner = 2
+
+    elif pacman1.hp > pacman2.hp:
+        winner = 1
+
+    else:
+        winner = 2
+
+    clock.tick(FPS)
 
     sc.blit(end_image, (0, 0, 1240, 760))
+
+    if winner:
+        win_text = f'Победил игрок {winner}'
+
+    else:
+        win_text = 'Ничья'
+
+    fontObj = pygame.font.Font('freesansbold.ttf', 50)
+
+    textSurfaceObj = fontObj.render(win_text, True,
+                                    pygame.Color('yellow' if winner == 1 else
+                                                 'green' if winner == 2 else
+                                                 'white'))
+    textRectObj = textSurfaceObj.get_rect()
+    textRectObj.center = (WIGHT - 250, 40)
+
+    sc.blit(textSurfaceObj, textRectObj)
+
     pygame.display.flip()
 
     for event in pygame.event.get():
@@ -329,15 +363,21 @@ while not is_end:
                 is_game_over = False
                 pacman2.set_coords(47, 4)
                 pacman2.course = 4
+                pacman2.hp = MAX_HP
                 pacman1.set_coords(4, 27)
                 pacman1.course = 2
+                pacman1.hp = MAX_HP
                 red1.set_coords(5, 4)
-                red2.set_coords(45, 26)
+                red2.set_coords(45, 27)
                 blue1.set_coords(6, 4)
-                blue2.set_coords(46, 26)
+                blue2.set_coords(46, 27)
                 pink1.set_coords(7, 4)
-                pink2.set_coords(47, 26)
+                pink2.set_coords(47, 27)
                 orange1.set_coords(8, 4)
-                orange2.set_coords(48, 26)
+                orange2.set_coords(48, 27)
                 time = 0
+                ghosts = [red1, red2, blue1, blue2, orange1, orange2, pink1, pink2]
+                walls = []
+                eats = []
+                boosts = []
                 write_map('map.txt')

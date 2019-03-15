@@ -27,17 +27,22 @@ class Ghost(AbstractAlive):
         if self.course != 3:
             if (self.x, self.y - 1) not in self.walls:
                 posible_turns.append(((self.x, self.y - 1), 1))
+
         if self.course != 4:
             if (self.x - 1, self.y) not in self.walls:
                 posible_turns.append((((self.x - 1) % self.width, self.y), 2))
+
         if self.course != 1:
             if (self.x, self.y + 1) not in self.walls:
                 posible_turns.append(((self.x, self.y + 1), 3))
+
         if self.course != 2:
             if (self.x + 1, self.y) not in self.walls:
                 posible_turns.append((((self.x + 1) % self.width, self.y), 4))
-
-        self.course = random.choice(posible_turns)[1]
+        if posible_turns:
+            self.course = random.choice(posible_turns)[1]
+        else:
+            print('Sho')
 
     def get_coords(self):
         return super().get_coords()
@@ -62,7 +67,7 @@ class Ghost(AbstractAlive):
 
     def move(self):
         super().move()
-        self.set_coords(self.x, self.y)
+        # self.set_coords(self.x, self.y)
 
 
 class RedBlinky(Ghost):
